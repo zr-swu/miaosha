@@ -43,16 +43,16 @@ jQuery(document).ready(function () {
             $.ajax({
                 type:"POST",
                 contentType:"application/x-www-form-urlencoded",
-                url:"http://localhost:8090/user/getotp",
+                url:"http://localhost:8080/user/getotp",
                 data:{
                     "telphone":$("#telphone").val(),
                 },
                 //允许跨域请求
-                //xhrFields:{withCredentials:true},
+                xhrFields:{withCredentials:true},
                 success:function (data) {
                     if (data.status=="success") {
                         alert("otp已经发送到了您的手机，请注意查收");
-                        window.location.href="register.html";
+                        window.location.href="register.html";//跳转到register.html
                     }else {
                         alert("otp发送失败，原因为" + data.data.errMsg);//后端出异常失败
                     }

@@ -6,12 +6,14 @@ import com.miaoshaproject.dao.UserPasswordDOMapper;
 import com.miaoshaproject.dataobject.UserDO;
 import com.miaoshaproject.dataobject.UserPasswordDO;
 import com.miaoshaproject.error.BusinessException;
+import com.miaoshaproject.error.CommonError;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.service.UserService;
 import com.miaoshaproject.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +59,15 @@ public class UserServiceImpl implements UserService {
 
         //实现model(service)->dataobeject(dao层)
         UserDO userDO = convertFromModel(userModel);
-        userDOMapper.insertSelective(userDO);
+        try {
+            userDOMapper.insertSelective(userDO);//此时userModel是没有Id的 Id是在插入时自增的
+//        在插入数据后，mybatis会将自动分配给该记录的id值赋值到对象的id属性中
+
+        }catch (DuplicateKeyException ex){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已注册");
+        }
+
+        userModel.setId(userDO.getId());
 
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);

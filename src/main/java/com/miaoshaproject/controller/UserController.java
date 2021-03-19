@@ -13,8 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -24,7 +28,6 @@ import java.util.Random;
  */
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin
 public class UserController extends BaseController {
 
     @Autowired
@@ -42,7 +45,7 @@ public class UserController extends BaseController {
                                      @RequestParam(name = "name")String name,
                                      @RequestParam(name = "gender") Byte gender,
                                      @RequestParam(name = "age")Integer age,
-                                     @RequestParam(name = "password")String password) throws BusinessException {
+                                     @RequestParam(name = "password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
 
         //验证手机号和对应的otpcode相符合
@@ -56,17 +59,26 @@ public class UserController extends BaseController {
         //表单数据封装为Service层数据单元UserModel
         UserModel userModel = new UserModel();
         userModel.setName(name);
-        userModel.setGender(gender);
+        userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setAge(age);
         userModel.setTelphone(telphone);
         userModel.setRegisitMode("byphone");
-        userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
+        userModel.setEncrptPassword(this.EncodeByMd5(password));
 
         userService.register(userModel);
         return CommonReturnType.create(null);
 
     }
 
+    public String EncodeByMd5(String str) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        //确定计算方法
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        BASE64Encoder base64en = new BASE64Encoder();
+
+        //加密字符串
+        String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
+        return newstr;
+    }
 
     //用户获取otp短信接口
     @RequestMapping(value = "/getotp",method = RequestMethod.POST,consumes = CONTENT_TYPE_FORMED)
