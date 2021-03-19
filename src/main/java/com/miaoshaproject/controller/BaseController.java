@@ -17,6 +17,9 @@ import java.util.HashMap;
  */
 public class BaseController {
 
+
+    public static final String CONTENT_TYPE_FORMED = "application/x-www-form-urlencoded";
+
     /**
      * 定义在基Controller中  继承他的都可以用
      * @param request
