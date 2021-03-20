@@ -39,7 +39,7 @@ public class UserController extends BaseController {
 
 
 
-    //用户注册接口
+    //用户登录接口
     @RequestMapping(value = "/login",method = RequestMethod.POST,consumes = CONTENT_TYPE_FORMED)
     @ResponseBody
     public CommonReturnType login(@RequestParam(name="telphone") String telphone,
