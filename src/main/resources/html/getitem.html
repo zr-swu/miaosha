@@ -127,7 +127,7 @@
         $("#price").text(g_itemVO.price);
         $("#stock").text(g_itemVO.stock);
         $("#sales").text(g_itemVO.sales);
-        if (g_itemVO.promoStatus == 1) {
+        /*if (g_itemVO.promoStatus == 1) {
             // 秒杀活动还未开始
             console.log(g_itemVO.startDate);
             var startTime = g_itemVO.startDate.replace(new RegExp("-", "gm"), "/");
@@ -148,7 +148,7 @@
             $("#promoPrice").text(g_itemVO.promoPrice);
             $("#createOrder").attr("disabled", false);
             $("#normalPriceContainer").hide();
-        }
+        }*/
     }
     function getParam(paramName) {
         paramValue = "", isFound = !1;
