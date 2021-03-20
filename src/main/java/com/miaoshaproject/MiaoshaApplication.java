@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class MiaoshaApplication {
 
-    @Autowired
-    private UserDOMapper userDOMapper;
-
     public static void main(String[] args) {
         SpringApplication.run(MiaoshaApplication.class, args);
     }

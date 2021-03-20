@@ -1,6 +1,6 @@
 package com.miaoshaproject.service.impl;
 
-import com.alibaba.druid.util.StringUtils;
+
 import com.miaoshaproject.dao.UserDOMapper;
 import com.miaoshaproject.dao.UserPasswordDOMapper;
 import com.miaoshaproject.dataobject.UserDO;
@@ -10,6 +10,7 @@ import com.miaoshaproject.error.CommonError;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.service.UserService;
 import com.miaoshaproject.service.model.UserModel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +72,27 @@ public class UserServiceImpl implements UserService {
 
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
+    }
+
+    @Override
+    public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
+        //通过用户的手机获取用户信息
+        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+
+        if (userDO==null){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
+
+        UserModel userModel = convertFromDataObeject(userDO, userPasswordDO);
+
+        //比对用户信息内加密的密码是否与传进来的密码相匹配
+        if(!StringUtils.equals(encrptPassword, userModel.getEncrptPassword())){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+
+        return userModel;
     }
 
     private UserPasswordDO convertPasswordFromModel(UserModel userModel){
