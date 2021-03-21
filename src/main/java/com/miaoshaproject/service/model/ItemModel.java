@@ -14,7 +14,6 @@ public class ItemModel {
 
     private Integer id;
 
-
     //商品名称
     @NotBlank(message = "商品名称不能为空")
     private String title;
@@ -39,6 +38,16 @@ public class ItemModel {
     @NotBlank(message = "图片信息不能为空")
     private String imgUrl;
 
+    //使用聚合模型 如果promoModel不为空 则表示其存在结束的活动
+    private PromoModel promoModel;
+
+    public PromoModel getPromoModel() {
+        return promoModel;
+    }
+
+    public void setPromoModel(PromoModel promoModel) {
+        this.promoModel = promoModel;
+    }
 
     public Integer getId() {
         return id;

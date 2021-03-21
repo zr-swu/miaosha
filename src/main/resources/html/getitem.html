@@ -11,7 +11,7 @@
 <div class="content">
     <h3 class="form-title">商品详情</h3>
     <div id="promoStartDateContainer" class="form-group">
-        <label style="color:blue" id="promoStatus" class="control-label"></label>
+        <label style="color:#0000ff" id="promoStatus" class="control-label"></label>
         <div>
             <label style="color:red" class="control-label" id="promoStartDate" />
         </div>
@@ -80,6 +80,7 @@
             success: function(data) {
                 if (data.status == "success") {
                     g_itemVO = data.data;
+                    console.log(data.data);
                     reloadDom();
                     setInterval(reloadDom, 1000);
                 } else {
@@ -97,7 +98,7 @@
                 contentType: "application/x-www-form-urlencoded",
                 data: {
                     "itemId": g_itemVO.id,
-                    // "promoId": g_itemVO.promoId,
+                    "promoId": g_itemVO.promoId,
                     "amount": 1,//暂时写死为一件
                 },
                 xhrFields:{
@@ -127,7 +128,7 @@
         $("#price").text(g_itemVO.price);
         $("#stock").text(g_itemVO.stock);
         $("#sales").text(g_itemVO.sales);
-        /*if (g_itemVO.promoStatus == 1) {
+        if (g_itemVO.promoStatus == 1) {
             // 秒杀活动还未开始
             console.log(g_itemVO.startDate);
             var startTime = g_itemVO.startDate.replace(new RegExp("-", "gm"), "/");
@@ -148,7 +149,7 @@
             $("#promoPrice").text(g_itemVO.promoPrice);
             $("#createOrder").attr("disabled", false);
             $("#normalPriceContainer").hide();
-        }*/
+        }
     }
     function getParam(paramName) {
         paramValue = "", isFound = !1;
